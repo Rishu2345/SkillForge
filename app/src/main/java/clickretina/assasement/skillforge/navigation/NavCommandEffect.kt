@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun NavCommandEffect(
-    navHostController: NotableComposeNavController,
+    navHostController: AppComposeNavController,
     navCommandFlow: Flow<NavCommand>,
 ) {
     LaunchedEffect(navHostController) {

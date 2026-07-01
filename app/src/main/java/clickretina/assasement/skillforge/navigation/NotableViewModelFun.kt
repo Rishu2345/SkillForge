@@ -6,12 +6,9 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 inline fun <reified T : AppViewModel> appViewModel(
-    navController: NotableComposeNavController,
+    navController: AppComposeNavController,
 ): T {
-
     val viewModel: T = koinViewModel()
-
-
 
     NavCommandEffect(
         navHostController = navController,
@@ -20,4 +17,3 @@ inline fun <reified T : AppViewModel> appViewModel(
 
     return viewModel
 }
-

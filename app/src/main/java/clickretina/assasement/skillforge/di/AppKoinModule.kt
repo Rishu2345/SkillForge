@@ -2,7 +2,12 @@ package clickretina.assasement.skillforge.di
 
 import clickretina.assasement.skillforge.network.ApiService
 import clickretina.assasement.skillforge.network.RetrofitProvider
+import clickretina.assasement.skillforge.repository.CourseRepository
+import clickretina.assasement.skillforge.viewModel.courseDetailsViewModel.CourseDetailsViewModel
+import clickretina.assasement.skillforge.viewModel.homeScreenViewModel.HomeViewModel
+import clickretina.assasement.skillforge.viewModel.lessonPlayerViewModel.LessonPlayerViewModel
 import kotlinx.serialization.json.Json
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appKoinModule = module {
@@ -14,8 +19,22 @@ val appKoinModule = module {
         }
     }
 
-    single<ApiService>{
+    single<ApiService> {
         RetrofitProvider.api
     }
 
+    single {
+        CourseRepository(get())
+    }
+
+    viewModel {
+        HomeViewModel(get(), get())
+    }
+    viewModel {
+        CourseDetailsViewModel(get())
+    }
+    viewModel {
+        LessonPlayerViewModel(get())
+    }
 }
+
