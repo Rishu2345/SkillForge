@@ -43,19 +43,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import clickretina.assasement.skillforge.model.Lesson
-import clickretina.assasement.skillforge.navigation.AppComposeNavController
-import clickretina.assasement.skillforge.navigation.appViewModel
+import clickretina.assasement.skillforge.ui.theme.SkillForgeDarkText
 import clickretina.assasement.skillforge.ui.theme.skillForgeColors
 import clickretina.assasement.skillforge.viewModel.courseDetailsViewModel.CourseDetailsData
 import clickretina.assasement.skillforge.viewModel.courseDetailsViewModel.CourseDetailsUiState
 import clickretina.assasement.skillforge.viewModel.courseDetailsViewModel.CourseDetailsViewModel
 import clickretina.assasement.skillforge.viewModel.courseDetailsViewModel.LessonUiModel
+import coil3.compose.AsyncImage
 
 @Composable
 fun CourseDetailsScreen(
@@ -109,7 +109,7 @@ fun CourseDetailsScreen(
 private fun CourseDetailsContent(
     data: CourseDetailsData,
     onBackClick: () -> Unit,
-    onLessonClick: (Lesson) -> Unit,
+    onLessonClick: (Lesson) -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -118,8 +118,7 @@ private fun CourseDetailsContent(
                 .verticalScroll(rememberScrollState())
                 .padding(bottom = 92.dp),
         ) {
-            TopBar(onBackClick = onBackClick)
-            HeroImage(data = data)
+            HeroImage(data = data,onBackClick)
             CourseInfo(data = data)
             InstructorCard(data = data)
             DescriptionBlock(description = data.description)
@@ -132,11 +131,14 @@ private fun CourseDetailsContent(
 }
 
 @Composable
-private fun TopBar(onBackClick: () -> Unit) {
+private fun TopBar(
+    modifier:Modifier = Modifier ,
+    onBackClick: () -> Unit
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
+            .background(Color.Transparent)
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -144,14 +146,17 @@ private fun TopBar(onBackClick: () -> Unit) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Back",
-                tint = MaterialTheme.colorScheme.onSurface,
+                tint = SkillForgeDarkText,
             )
         }
     }
 }
 
 @Composable
-private fun HeroImage(data: CourseDetailsData) {
+private fun HeroImage(
+    data: CourseDetailsData,
+    onBackClick: () -> Unit,
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -174,6 +179,7 @@ private fun HeroImage(data: CourseDetailsData) {
                 TagPill(text = tag)
             }
         }
+        TopBar(modifier = Modifier.align(Alignment.TopCenter), onBackClick = onBackClick)
     }
 }
 
@@ -304,7 +310,7 @@ private fun CourseContent(
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
-            text = "${data.lessonCount} lessons � ${data.totalLessonMinutes} min",
+            text = "${data.lessonCount} lessons : ${data.totalLessonMinutes} min",
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             style = MaterialTheme.typography.bodySmall,
         )
@@ -326,7 +332,7 @@ private fun LessonRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .clickable(enabled = lesson.isFree, onClick = onClick)
             .padding(vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {

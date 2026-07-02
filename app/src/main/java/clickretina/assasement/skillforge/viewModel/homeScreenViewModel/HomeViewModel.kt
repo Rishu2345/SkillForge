@@ -2,6 +2,7 @@ package clickretina.assasement.skillforge.viewModel.homeScreenViewModel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import clickretina.assasement.skillforge.model.Category
 import clickretina.assasement.skillforge.model.Course
 import clickretina.assasement.skillforge.navigation.CourseDetailsRoute
 import clickretina.assasement.skillforge.navigation.NavCommand
@@ -19,6 +20,7 @@ class HomeViewModel(
 
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+    private var allCategories: List<Category> = emptyList()
 
     init {
         loadHome()
@@ -32,11 +34,25 @@ class HomeViewModel(
         _navCommandFlow.tryEmit(NavCommand.Navigate(CourseDetailsRoute.create(course)))
     }
 
+    fun onCategoryClick(categoryName: String) {
+        val category = allCategories.firstOrNull {
+            it.name == categoryName
+        }
+        val current = (_uiState.value as? HomeUiState.Success)?.data ?: return
+
+        _uiState.value = HomeUiState.Success(
+            current.copy(
+                popularCourses = category?.courses?.map { it.toUiModel() } ?: emptyList()
+            )
+        )
+    }
+
     private fun loadHome() {
         viewModelScope.launch {
             _uiState.value = HomeUiState.Loading
             runCatching { repository.getCourses() }
                 .onSuccess { response ->
+                    allCategories = response.categories
                     _uiState.value = HomeUiState.Success(buildHomeData(response.categories))
                 }
                 .onFailure {

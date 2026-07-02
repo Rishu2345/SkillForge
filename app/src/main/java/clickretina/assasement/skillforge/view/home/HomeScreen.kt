@@ -31,6 +31,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -43,15 +45,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import clickretina.assasement.skillforge.model.Course
-import clickretina.assasement.skillforge.navigation.AppComposeNavController
-import clickretina.assasement.skillforge.navigation.appViewModel
+import clickretina.assasement.skillforge.ui.theme.skillForgeColors
 import clickretina.assasement.skillforge.viewModel.homeScreenViewModel.CategoryUiModel
 import clickretina.assasement.skillforge.viewModel.homeScreenViewModel.CourseUiModel
 import clickretina.assasement.skillforge.viewModel.homeScreenViewModel.HomeUiState
-import clickretina.assasement.skillforge.ui.theme.skillForgeColors
 import clickretina.assasement.skillforge.viewModel.homeScreenViewModel.HomeViewModel
+import coil3.compose.AsyncImage
+import androidx.core.graphics.toColorInt
 
 @Composable
 fun HomeScreen(
@@ -62,7 +63,7 @@ fun HomeScreen(
     HomeScreen(
         uiState = uiState,
         onCourseClick = viewModel::onCourseClick,
-        onCategoryClick = {},
+        onCategoryClick = viewModel::onCategoryClick,
         onRetry = viewModel::retry,
     )
 }
@@ -187,30 +188,52 @@ private fun HomeHeader() {
 }
 
 @Composable
-private fun SearchBar() {
-    Row(
-        modifier = Modifier
+fun SearchBar(
+    modifier: Modifier = Modifier,
+    query: String = "",
+    onQueryChange: (String) -> Unit = {}
+) {
+    OutlinedTextField(
+        value = query,
+        onValueChange = onQueryChange,
+        modifier = modifier
             .fillMaxWidth()
-            .height(48.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surface)
-            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
-            .padding(horizontal = 14.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Search,
-            contentDescription = "Search",
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(18.dp),
+            .height(48.dp),
+        singleLine = true,
+        placeholder = {
+            Text(
+                text = "Search courses, topics...",
+                style = MaterialTheme.typography.bodySmall,
+            )
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search",
+                modifier = Modifier.size(18.dp)
+            )
+        },
+        shape = RoundedCornerShape(12.dp),
+        textStyle = MaterialTheme.typography.bodySmall,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+
+            focusedBorderColor = MaterialTheme.colorScheme.outline,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+
+            cursorColor = MaterialTheme.colorScheme.primary,
+
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+
+            focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+
+            focusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Spacer(modifier = Modifier.width(10.dp))
-        Text(
-            text = "Search courses, topics...",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.bodySmall,
-        )
-    }
+    )
 }
 
 @Composable
@@ -421,7 +444,7 @@ private fun ErrorContent(
 }
 
 private fun parseHexColor(hex: String): Color {
-    return Color(android.graphics.Color.parseColor(hex))
+    return Color(hex.toColorInt())
 }
 
 @Composable

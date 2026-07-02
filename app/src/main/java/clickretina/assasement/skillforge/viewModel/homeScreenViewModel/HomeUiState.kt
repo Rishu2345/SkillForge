@@ -43,7 +43,7 @@ fun buildHomeData(categories: List<Category>): HomeData {
     )
 }
 
-private fun Course.toUiModel(): CourseUiModel {
+fun Course.toUiModel(): CourseUiModel {
     return CourseUiModel(
         course = this,
         title = title,

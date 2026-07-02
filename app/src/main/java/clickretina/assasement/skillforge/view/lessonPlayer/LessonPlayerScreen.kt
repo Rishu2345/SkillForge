@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,8 +30,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
 import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -227,7 +226,7 @@ private fun LessonIdentity(data: LessonPlayerData) {
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
-            text = "LESSON ${data.currentLessonNumber} · ${data.courseTitle.uppercase()}",
+            text = "LESSON ${data.currentLessonNumber} : ${data.courseTitle.uppercase()}",
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Bold,
@@ -319,7 +318,7 @@ private fun LessonRow(
                 fontWeight = FontWeight.SemiBold,
             )
             Text(
-                text = if (lesson.isCurrent) "Now playing · ${lesson.durationMinutes} min" else "${lesson.durationMinutes} min",
+                text = if (lesson.isCurrent) "Now playing ï¿½ ${lesson.durationMinutes} min" else "${lesson.durationMinutes} min",
                 color = if (lesson.isCurrent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodySmall,
             )
@@ -433,4 +432,3 @@ private fun ErrorContent(
         }
     }
 }
-
